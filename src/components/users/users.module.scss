@@ -1,9 +1,11 @@
+@import "../var.scss";
 .wrapper {
-  padding: 20px 0;
+  padding:  20px;
   position: relative;
 }
 .search {
   width: 280px;
+  margin-bottom: 20px;
 }
 .error {
   position: absolute;
@@ -18,4 +20,18 @@
   border: 2px solid rgb(161, 26, 26);
   color: rgb(17, 15, 15);
   background-color: rgb(252, 140, 140);
+}
+
+.tableUsers {
+  margin-top: 30px;
+}
+
+.link {
+  text-decoration: none;
+}
+.link:visited {
+  color: $color-visited-link;
+}
+.hover {
+  cursor: pointer;
 }

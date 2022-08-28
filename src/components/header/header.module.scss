@@ -1,7 +1,7 @@
 @import  '../var.scss';
 
 .header {
-    background-color: rgb(72, 84, 95);
+    background-color: $color-bg-header;
     padding: 20px 0;
     text-align: center;
     color: $color-white
