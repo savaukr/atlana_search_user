@@ -10,7 +10,6 @@ function RepoItem({ repo }: Props) {
   const [amountForks, setAmountForks] = useState<number>(0);
   const [amountStars, setAmountStars] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
-  console.log(repo);
 
   const getDetails = async () => {
     let timerId;
@@ -19,10 +18,10 @@ function RepoItem({ repo }: Props) {
       if (repo && repo?.forks_url) {
         const response = await fetch(repo.forks_url);
         const forks = await response.json();
-        setAmountForks(forks?.length);
+        setAmountForks(forks?.length || 0);
         const res = await fetch(repo.stargazers_url);
         const stars = await res.json();
-        setAmountForks(stars?.length);
+        setAmountForks(stars?.length || 0);
       }
     } catch (err) {
       setError("Geting repositories details failed, try letter");
