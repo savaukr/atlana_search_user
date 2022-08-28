@@ -32,3 +32,10 @@ export type TUser = {
   created_at: string;
   updated_at: string;
 };
+
+export type TRepo = {
+  id: number;
+  name: string;
+  forks_url: string;
+  stargazers_url: string;
+};

@@ -1,6 +1,12 @@
+@import '../var';
+
 .wrapper {
 
 }
+.error {
+   @include error;
+  }
+
 .avatarBlock {
     display: flex;
     justify-content: space-between;
@@ -38,7 +44,18 @@
 .text {
     font-size: 20px;
 }
+.searchRepo {
+    margin-top: 20px;
+}
 .search {
     width: 350px;
     margin:20px 0;
 }
+.repoiesTable {
+    margin-top: 30px;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;;
+
+}
+

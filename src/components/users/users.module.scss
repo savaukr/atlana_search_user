@@ -8,18 +8,7 @@
   margin-bottom: 20px;
 }
 .error {
-  position: absolute;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  top: 10px;
-  right: 10px;
-  max-width: 360px;
-  min-width: 200px;
-  padding: 15px 20px;
-  border: 2px solid rgb(161, 26, 26);
-  color: rgb(17, 15, 15);
-  background-color: rgb(252, 140, 140);
+  @include error;
 }
 
 .tableUsers {

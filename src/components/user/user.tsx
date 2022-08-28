@@ -1,17 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import dayjs from "dayjs";
 import { useParams } from "react-router-dom";
 
-import { TUser } from "../user.type";
+import { debounce } from "../../helpers/debounce";
+import { TUser, TRepo } from "../user.type";
 import TextField from "@mui/material/TextField";
+import iconAttention from "../../images/Icon_attention.png";
 
 import styles from "./user.module.scss";
+import RepoItem from "../repoItem/repoItem";
 
 export default function User() {
   const params = useParams();
+  const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<TUser | null>(null);
-  const [search, setSearch] = useState<string | null>(null);
-
+  const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState<string>("");
+  const [repos, setRepos] = useState<TRepo[] | null>(null);
   useEffect(() => {
     const store = localStorage.getItem("users");
     const users: TUser[] = store ? JSON.parse(store) : [];
@@ -19,8 +24,59 @@ export default function User() {
     if (user) setUser(user);
   }, []);
 
+  useEffect(() => {}, []);
+
+  const getRepos = useCallback(
+    async (user: TUser) => {
+      let timerId;
+      try {
+        setIsLoading(true);
+        if (user && user?.repos_url) {
+          let response = await fetch(user.repos_url);
+          const repositories = await response.json();
+          setRepos(
+            repositories?.map((repo: any) => {
+              return {
+                id: repo?.id,
+                name: repo?.name,
+                forks_url: repo?.fork_urls,
+                stargazers_url: repo?.stargazers_ur,
+              };
+            })
+          );
+        }
+      } catch (err) {
+        setError(`Geting repositories failed, try letter`);
+        timerId = setTimeout(() => setError(null), 3000);
+      } finally {
+        if (timerId) clearTimeout(timerId);
+        setIsLoading(false);
+      }
+    },
+    [setError, setRepos]
+  );
+
+  useEffect(() => {
+    if (user) {
+      getRepos(user);
+    }
+  }, [user]);
+
   return (
     <div className={styles.wrapper}>
+      {error ? (
+        <div className={styles.error}>
+          <div>
+            <img
+              src={iconAttention}
+              alt="attention"
+              width="20px"
+              height="20px"
+            />
+          </div>
+          <div>{error}</div>
+        </div>
+      ) : null}
       <div>
         <div className={styles.avatarBlock}>
           <div className={styles.avatar}>
@@ -70,13 +126,19 @@ export default function User() {
           variant="outlined"
           value={search}
           onChange={(event) => {
-            console.log("search");
             setSearch(event.target.value);
-            // debounceGetSearchUser(event.target.value, users);
           }}
         />
       </div>
-      <div className={styles.repoiesTable}></div>
+      <div className={styles.repoiesTable}>
+        {!isLoading ? (
+          repos
+            ?.filter((repo) => repo?.name.includes(search))
+            ?.map((repo) => <RepoItem key={repo.id} repo={repo} />)
+        ) : (
+          <div>Loading...</div>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,0 +1,23 @@
+@import '../var';
+
+.repo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid black;
+    padding: 6px 8px;
+}
+.repoName {
+    width: 80%;
+    text-align: left;
+}
+.amounts {
+    width: 20%;
+    text-align: left;
+}
+
+
+
+.error {
+   @include error;
+  }
