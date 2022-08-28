@@ -132,7 +132,9 @@ export default function User() {
       <div className={styles.repoiesTable}>
         {!isLoading ? (
           repos
-            ?.filter((repo) => repo?.name.includes(search))
+            ?.filter((repo) =>
+              repo?.name?.toLowerCase().includes(search?.toLowerCase())
+            )
             ?.map((repo) => <RepoItem key={repo.id} repo={repo} />)
         ) : (
           <div>Loading...</div>
