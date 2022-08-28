@@ -25,12 +25,14 @@ const columns = [
   { name: "Name", width: "45%" },
   { name: "Link", width: "30%" },
 ];
-
-export default function Users() {
+type Props = {
+  users: TUser[];
+  setUsers: (users: TUser[]) => void;
+};
+export default function Users({ users, setUsers }: Props) {
   const navigate = useNavigate();
   const [search, setSearch] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
-  const [users, setUsers] = useState<TUser[]>([]);
 
   useEffect(() => {
     const usersLocalStorage = localStorage.getItem("users");
