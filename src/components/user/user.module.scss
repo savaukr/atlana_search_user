@@ -1,0 +1,44 @@
+.wrapper {
+
+}
+.avatarBlock {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    @media screen and (max-width: 500px) {
+        flex-direction: column;
+    }
+}
+.avatar {
+   width: 40%;
+}
+.avatarImg {
+    max-width: 360px;
+    @media screen and (max-width: 750px) {
+        max-width: 200px;
+    }
+}
+.info {
+    width: 50%;
+    @media screen and (max-width: 500px) {
+        margin-top: 20px;
+    }
+}
+.infoItem {
+    font-size: 20px;
+    margin-bottom: 8px;
+    text-align: left;
+}
+.label {
+    font-weight: 700;
+    margin-right: 10px;
+}
+.text {
+    font-size: 20px;
+}
+.search {
+    width: 350px;
+    margin:20px 0;
+}

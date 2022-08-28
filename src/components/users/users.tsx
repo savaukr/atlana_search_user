@@ -14,49 +14,41 @@ import { debounce } from "../../helpers/debounce";
 import iconAttention from "../../images/Icon_attention.png";
 
 import styles from "./users.module.scss";
-import { isBrowser } from "@emotion/utils";
-
-// onClick={() => {
-//     navigate(`/${user.id}`);
-//   }}
 
 const columns = [
   { name: "Avatar", width: "25%" },
   { name: "Name", width: "45%" },
   { name: "Link", width: "30%" },
 ];
-type Props = {
-  users: TUser[];
-  setUsers: (users: TUser[]) => void;
-};
-export default function Users({ users, setUsers }: Props) {
+
+const usersLocalStorage = localStorage.getItem("users");
+const usersStorage = usersLocalStorage ? JSON.parse(usersLocalStorage) : [];
+
+export default function Users() {
   const navigate = useNavigate();
   const [search, setSearch] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+  const [users, setUsers] = useState<TUser[]>(usersStorage);
 
-  useEffect(() => {
-    const usersLocalStorage = localStorage.getItem("users");
-    console.log("usersLocalStorage:", usersLocalStorage);
-    if (usersLocalStorage) setUsers(JSON.parse(usersLocalStorage));
-    else localStorage.setItem("users", JSON.stringify(users));
-  }, []);
+  const getSearchUsers = useCallback(
+    async (userName: string, users: TUser[]) => {
+      let timerId;
+      try {
+        let response = await fetch(`https://api.github.com/users/${userName}`);
+        const user = await response.json();
+        const newUsers = [...users, user];
 
-  const getSearchUsers = useCallback(async (userName: string) => {
-    let timerId;
-    try {
-      let response = await fetch(`https://api.github.com/users/${userName}`);
-      const json = await response.json();
-      console.log("json:", json);
-      const newUsers = [...users, json];
-      setUsers(newUsers);
-      localStorage.setItem("users", JSON.stringify(newUsers));
-    } catch (err) {
-      setError(`Do not get users with name ${search}, try letter`);
-      timerId = setTimeout(() => setError(null), 3000);
-    } finally {
-      if (timerId) clearTimeout(timerId);
-    }
-  }, []);
+        setUsers(newUsers);
+        localStorage.setItem("users", JSON.stringify(newUsers));
+      } catch (err) {
+        setError(`Do not get users with name ${search}, try letter`);
+        timerId = setTimeout(() => setError(null), 3000);
+      } finally {
+        if (timerId) clearTimeout(timerId);
+      }
+    },
+    [setError, setUsers, search]
+  );
 
   const debounceGetSearchUser = useCallback(debounce(getSearchUsers, 1000), []);
 
@@ -106,11 +98,11 @@ export default function Users({ users, setUsers }: Props) {
         value={search}
         onChange={(event) => {
           setSearch(event.target.value);
-          debounceGetSearchUser(event.target.value);
+          debounceGetSearchUser(event.target.value, users);
         }}
       />
       <div className={styles.tableUsers}>
-        <TableContainer sx={{ maxHeight: 440 }}>
+        <TableContainer sx={{ maxHeight: 800 }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
