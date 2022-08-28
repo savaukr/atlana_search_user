@@ -10,15 +10,19 @@ function RepoItem({ repo }: Props) {
   const [amountForks, setAmountForks] = useState<number>(0);
   const [amountStars, setAmountStars] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
+  console.log(repo);
 
   const getDetails = async () => {
     let timerId;
     try {
       setIsLoading(true);
-      if (repo) {
-        let response = await fetch(repo.forks_url);
+      if (repo && repo?.forks_url) {
+        const response = await fetch(repo.forks_url);
         const forks = await response.json();
         setAmountForks(forks?.length);
+        const res = await fetch(repo.stargazers_url);
+        const stars = await res.json();
+        setAmountForks(stars?.length);
       }
     } catch (err) {
       setError("Geting repositories details failed, try letter");
@@ -29,7 +33,9 @@ function RepoItem({ repo }: Props) {
     }
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    getDetails();
+  }, [repo]);
 
   return (
     <>
@@ -49,8 +55,8 @@ function RepoItem({ repo }: Props) {
       <div className={styles.repo}>
         <div className={styles.repoName}>{repo.name}</div>
         <div className={styles.amounts}>
-          <div>{} Forks</div>
-          <div>{} Stars</div>
+          <div>{amountForks} Forks</div>
+          <div>{amountStars} Stars</div>
         </div>
       </div>
     </>

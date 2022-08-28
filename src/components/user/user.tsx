@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import dayjs from "dayjs";
 import { useParams } from "react-router-dom";
 
-import { debounce } from "../../helpers/debounce";
 import { TUser, TRepo } from "../user.type";
 import TextField from "@mui/material/TextField";
 import iconAttention from "../../images/Icon_attention.png";
@@ -39,8 +38,8 @@ export default function User() {
               return {
                 id: repo?.id,
                 name: repo?.name,
-                forks_url: repo?.fork_urls,
-                stargazers_url: repo?.stargazers_ur,
+                forks_url: repo?.forks_url,
+                stargazers_url: repo?.stargazers_url,
               };
             })
           );
